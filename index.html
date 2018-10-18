@@ -55,8 +55,8 @@
   
 <div class='map-overlay' id='time_slider'>
   <h2>Date of Construction</h2>
-  <label id='constr_year'> 1950 </label>
-  <input id='slider' type='range' min='1950' max='2020' step='1' value='1950' />
+  <label id='constr_year'> 2020 </label>
+  <input id='slider' type='range' min='1950' max='2020' step='1' value='2020' />
 </div>
 
 
@@ -106,8 +106,6 @@ map.on('load', function() {
             'fill-extrusion-base': 0,
         }
     });
-  
-    filterBy(0);
 
         document.getElementById('time_slider').addEventListener('input', function(e) {
             var date = parseInt(e.target.value, 10);
