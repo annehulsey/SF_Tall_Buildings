@@ -1,0 +1,124 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset='utf-8' />
+    <title>Tall Buildings In San Francisco</title>
+    <meta name='viewport' content='initial-scale=1,maximum-scale=1,user-scalable=no' />
+    <script src='https://api.tiles.mapbox.com/mapbox-gl-js/v0.50.0/mapbox-gl.js'></script>
+    <link href='https://api.tiles.mapbox.com/mapbox-gl-js/v0.50.0/mapbox-gl.css' rel='stylesheet' />
+    <link href="https://api.mapbox.com/mapbox-assembly/v0.21.0/assembly.min.css" rel="stylesheet">  
+    <script async defer src="https://api.mapbox.com/mapbox-assembly/v0.21.0/assembly.js"></script>
+  
+<style>
+
+  body { margin:0; padding:0; }
+        
+  h2,h3 {margin: 10px;
+         font-size: 1.2em;
+  }
+  
+  h3    {font-size: 1em;
+  }
+  
+  p     {font-size: 0.85em;
+         margin: 10px;
+         text-align: left;
+  }
+      
+  #map { position:absolute; top:0; bottom:0; width:100%; }
+      
+
+.map-overlay {
+  position: absolute;
+  bottom: 0;
+  right: 0;
+  background: rgba(255, 255, 255, 0.8);
+  margin-right: 20px;
+  font-family: Arial, sans-serif;
+  overflow: auto;
+  border-radius: 3px;
+}
+#time_slider {
+  top: 0;
+  height: 100px;
+  margin-top: 20px;
+  width: 250px;
+}
+
+      
+    </style>
+  
+</head>
+<body>
+
+<div id='map'></div>
+  
+<div class='map-overlay' id='time_slider'>
+  <h2>Date of Construction</h2>
+  <label id='constr_year'> 1950 </label>
+  <input id='slider' type='range' min='1950' max='2020' step='1' value='1950' />
+</div>
+
+
+
+<script>
+mapboxgl.accessToken = 'pk.eyJ1IjoiYWh1bHNleSIsImEiOiJjamhtaGNuNjIwemoyM2RyMG5qNzhhYnhmIn0.elxp9WxADMJqTFg3R7h6fQ';
+var map = new mapboxgl.Map({
+    container: 'map', // container id
+    style: 'mapbox://styles/ahulsey/cjneyfjr52q7k2st6m6ky9w2t', // stylesheet location
+    center: [-122.399, 37.789], // starting position [lng, lat]
+    pitch: 60, // pitch in degrees
+    bearing: 0, // bearing in degrees
+    zoom: 15 // starting zoom
+});
+  
+
+function filterBy(date) {
+  
+  var filters = ['<=', ["to-number", ["get", "date"] ], date];
+  map.setFilter('all_buildings', filters);
+  
+  document.getElementById('constr_year').textContent = date;
+}
+  
+map.on('load', function() {
+    map.addLayer({
+        'id': 'all_buildings',
+        'type': 'fill-extrusion',
+        'source': {
+            'type': 'geojson',
+            'data': 'https://data.sfgov.org/resource/5kya-mfst.geojson'
+        },
+        'filter': ['>=', ["to-number", ["get", "height_ft"] ], 240],
+        'paint': {
+            'fill-extrusion-color': ["match",
+                                      ["get", "structural_types"],
+                                       "RC Shear Wall",
+                                        "#c45612",
+                                        "Steel Braced Frame",
+                                        "#366c87",
+                                        "Steel Moment Frame",
+                                        "#468736",
+                                        "#5f5858"
+                                     ],
+          
+            'fill-extrusion-height': ["/", ["to-number", ["get", "height_ft"] ],  3.28],
+            'fill-extrusion-base': 0,
+        }
+    });
+  
+    filterBy(0);
+
+        document.getElementById('time_slider').addEventListener('input', function(e) {
+            var date = parseInt(e.target.value, 10);
+            filterBy(date);
+        });
+});
+
+  
+// Add zoom and rotation controls to the map.
+map.addControl(new mapboxgl.NavigationControl());
+</script>
+
+</body>
+</html>
