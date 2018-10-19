@@ -16,10 +16,10 @@
          font-size: 1.2em;
   }
   
-  h3    {font-size: 1em;
+  h3    {font-size: 1.1em;
   }
   
-  p     {font-size: 0.85em;
+  p     {font-size: 1em;
          margin: 10px;
          text-align: left;
   }
@@ -40,16 +40,23 @@
   top: 0;
   padding: 10px;
   height: 100px;
-  margin-top: 20px;
-  width: 300px;
+  margin-top: 150px;
+  width: 200px;
 }
-#legend {
+#min_slider {
   top: 0;
   padding: 10px;
+  height: 130px;
+  margin-top: 20px;
+  width: 200px;
+}  
+#legend {
+  top: 1;
+  padding: 10px;
   line-height: 20px;
-  height: 100px;
-  margin-top: 120px;
-  width: 300px;  
+  height: 120px;
+  margin-top: 450px;
+  width: 200px;  
 } 
 .legend-key {
 display: inline-block;
@@ -67,10 +74,14 @@ margin-right: 5px;
 
 <div id='map'></div>
   
+<div class='map-overlay' id='min_slider'>
+  <h2>Construction Date:</h2>
+  <h3>After: <label id='min_constr_year'> 1880 </label> </h3>
+  <input id='slider' type='range' min='1880' max='2020' step='1' value='1880' />
+</div>
 <div class='map-overlay' id='max_slider'>
-  <h2>Buildings Constructed Prior to:</h2>
-  <input id='slider' type='range' min='1950' max='2020' step='1' value='2020' />
-  <label id='constr_year'> 2020 </label>
+  <h3>Prior to: <label id='max_constr_year'> 2020 </label> </h3>
+  <input id='slider' type='range' min='1880' max='2020' step='1' value='2020' />
 </div>
   <div class='map-overlay' id='legend'></div>
 
@@ -87,17 +98,19 @@ var map = new mapboxgl.Map({
     zoom: 15 // starting zoom
 });
   
-function filterBy(date) {
+function filterBy(min_date, max_date) {
   
-  var filters = ['<=', ["to-number", ["get", "date"] ], date];
-  map.setFilter('all_buildings', filters);
+  var max_filter = ['<=', ["to-number", ["get", "date"] ], max_date];
+  var min_filter = ['>=', ["to-number", ["get", "date"] ], min_date];
+  map.setFilter('buildings', ["all", max_filter, min_filter]);
   
-  document.getElementById('constr_year').textContent = date;
+  document.getElementById('max_constr_year').textContent = max_date;
+  document.getElementById('min_constr_year').textContent = min_date;
 }
   
 map.on('load', function() {
     map.addLayer({
-        'id': 'all_buildings',
+        'id': 'buildings',
         'type': 'fill-extrusion',
         'source': {
             'type': 'geojson',
@@ -121,8 +134,15 @@ map.on('load', function() {
         }
     });
         document.getElementById('max_slider').addEventListener('input', function(e) {
-            var date = parseInt(e.target.value, 10);
-            filterBy(date);
+            var max_date = parseInt(e.target.value, 10);
+            var min_date = Number(document.getElementById('min_constr_year').textContent)
+            filterBy(min_date, max_date);
+        });
+  
+        document.getElementById('min_slider').addEventListener('input', function(e) {
+            var min_date = parseInt(e.target.value, 10);
+            var max_date = Number(document.getElementById('max_constr_year').textContent)
+            filterBy(min_date, max_date);
         });
   
   var str_types = ['RC Shear Wall', 'Steel Moment Frame', 'Steel Braced Frame', 'Unknown'];
