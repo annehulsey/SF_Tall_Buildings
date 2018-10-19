@@ -66,8 +66,11 @@ height: 12px;
 margin-right: 5px;
 }
 
-      
-    </style>
+.mapboxgl-popup {
+   max-width: 400px;
+   font: 12px/20px 'Helvetica Neue', Arial, Helvetica, sans-serif;
+}      
+</style>
   
 </head>
 <body>
@@ -161,6 +164,28 @@ map.on('load', function() {
     item.appendChild(value);
     legend.appendChild(item);
   }
+  
+  
+  // Create a popup, but don't add it to the map yet.
+    var popup = new mapboxgl.Popup({
+        closeButton: false,
+        closeOnClick: false
+    });
+  
+  map.on('mousemove', 'buildings', function(e) {
+    var description = "temporary text";
+    
+    // Populate the popup and set its coordinates
+        // based on the feature found.
+        popup.setLngLat(e.lngLat)
+            .setHTML(description)
+            .addTo(map);
+  });
+  map.on('mouseleave', 'buildings', function() {
+        map.getCanvas().style.cursor = '';
+        popup.remove();
+    });
+  
 });
   
 // Add zoom and rotation controls to the map.
