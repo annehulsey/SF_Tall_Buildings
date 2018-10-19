@@ -111,6 +111,25 @@ map.on('load', function() {
             var date = parseInt(e.target.value, 10);
             filterBy(date);
         });
+    
+      var str_types = ['RC Shear Wall', 'Steel Moment Frame', 'Steel Braced Frame', 'Unknown'];
+  var str_type_colors = ['#c45612',            '#468736',            '#366c87', '#5f5858'];
+  
+  for (i = 0; i < str_types.length; i++) {
+    var str_type = str_types[i];
+    var color = str_type_colors[i];
+    var item = document.createElement('div');
+    var key = document.createElement('span');
+    key.className = 'legend-key';
+    key.style.backgroundColor = color;
+
+    var value = document.createElement('span');
+    value.innerHTML = str_type;
+    item.appendChild(key);
+    item.appendChild(value);
+    legend.appendChild(item);
+  }
+    
 });
 
   
