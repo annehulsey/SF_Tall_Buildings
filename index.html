@@ -174,12 +174,23 @@
             });
           
           map.on('mousemove', 'buildings', function(e) {
-            var description = "temporary text";
+            var name = e.features[0].properties.name;
+            var address = e.features[0].properties.address;
+            var date = e.features[0].properties.date;
+            var height = e.features[0].properties.height_ft;   
+            var n_stories = e.features[0].properties.stories_above_grade;
+            var occupancy = e.features[0].properties.occupancy;
+            var str_type = e.features[0].properties.structural_types;
+            var foundation = e.features[0].properties.foundation_system;
+            var facade = e.features[0].properties.facade_material;
+            var BORP = e.features[0].properties.borp_report;
+            var sprinkler = e.features[0].properties.percent_sprinklered;
+            var instrumentation = e.features[0].properties.instrumented;
             
             // Populate the popup and set its coordinates
                 // based on the feature found.
                 popup.setLngLat(e.lngLat)
-                    .setHTML(description)
+                    .setHTML(name)
                     .addTo(map);
           });
           map.on('mouseleave', 'buildings', function() {
