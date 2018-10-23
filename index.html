@@ -95,8 +95,15 @@
     <div id='map'></div>
     <div id='sidebar'>
         <h2>Hover of the base of a building for more info:</h2>
-        <div id='building-name'></div>
-        <div id='building-address'></div>
+        <div id='name'></div>
+        <div id='address'></div>
+        <div id='date'></div>
+        <br>
+        <div id='height'></div>
+        <div id='nStories'></div>
+        <br>
+        <div id='occupancy'></div>
+        <div id='str_type'></div>
     </div>
 
     <div class='map-overlay' id='min_slider'>
@@ -188,11 +195,6 @@
             legend.appendChild(item);
           }
           
-          // Create a popup, but don't add it to the map yet.
-            var popup = new mapboxgl.Popup({
-                closeButton: false,
-                closeOnClick: false
-            });
           
           map.on('mousemove', 'buildings', function(e) {
             var name = e.features[0].properties.name;
@@ -208,20 +210,25 @@
             var sprinkler = e.features[0].properties.percent_sprinklered;
             var instrumentation = e.features[0].properties.instrumented;
             
-            document.getElementById('building-name').innerHTML = "Name: " + e.features[0].properties.name;
-            document.getElementById('building-address').innerHTML = "Address: " + e.features[0].properties.address;
-            // Populate the popup and set its coordinates
-                // based on the feature found.
-                popup.setLngLat(e.lngLat)
-                    .setHTML(name)
-                    .addTo(map);
+            document.getElementById('name').innerHTML = "Name: " + e.features[0].properties.name;
+            document.getElementById('address').innerHTML = "Address: " + e.features[0].properties.address;
+            document.getElementById('date').innerHTML = "Date: " + e.features[0].properties.date;
+            document.getElementById('height').innerHTML = "Height: " + e.features[0].properties.height_ft + "ft";
+            document.getElementById('nStories').innerHTML = "Number of Stories: " + e.features[0].properties.stories_above_grade;
+            document.getElementById('occupancy').innerHTML = "Occupancy: " + e.features[0].properties.occupancy;
+            document.getElementById('str_type').innerHTML = "Structural Type: " + e.features[0].properties.structural_types;
+            
           });
           map.on('mouseleave', 'buildings', function() {
                 map.getCanvas().style.cursor = '';
-                popup.remove();
             
-                document.getElementById('building-name').innerHTML = "";
-                document.getElementById('building-address').innerHTML = "";
+                document.getElementById('name').innerHTML = "";
+                document.getElementById('address').innerHTML = "";
+                document.getElementById('date').innerHTML = "";
+                document.getElementById('height').innerHTML = "";
+                document.getElementById('nStories').innerHTML = "";
+                document.getElementById('occupancy').innerHTML = "";
+                document.getElementById('str_type').innerHTML = "";
             });
          }); 
         
