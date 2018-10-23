@@ -25,12 +25,14 @@
                  text-align: left;
           }
               
+
           #map { 
             position:absolute;
             top:0;
             bottom:0;
             width:100%;
           }
+
               
         .map-overlay {
           position: absolute;
@@ -71,10 +73,7 @@
         height: 12px;
         margin-right: 5px;
         }
-        .mapboxgl-popup {
-           max-width: 400px;
-           font: 12px/20px 'Helvetica Neue', Arial, Helvetica, sans-serif;
-        }
+
         #sidebar {
             position: absolute;
             top: 15px;
@@ -86,6 +85,7 @@
             font-family: "Arial";
             padding-left: 10px;
         }
+
     </style>
 
 </head>
@@ -113,6 +113,7 @@
         <div id='instrumentation'></div>
     </div>
 
+
     <div class='map-overlay' id='min_slider'>
         <h2>Construction Date:</h2>
         <h3>After: <label id='min_constr_year'> 1880 </label> </h3>
@@ -136,6 +137,7 @@
             bearing: 0, // bearing in degrees
             zoom: 15 // starting zoom
         });
+
           
         function filterBy(min_date, max_date) {
           
@@ -201,6 +203,7 @@
             item.appendChild(value);
             legend.appendChild(item);
           }
+
           
           
           map.on('mousemove', 'buildings', function(e) {
@@ -235,6 +238,7 @@
             });
          }); 
         
+
           
         // Add zoom and rotation controls to the map.
         map.addControl(new mapboxgl.NavigationControl());
