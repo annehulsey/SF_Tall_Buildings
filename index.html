@@ -217,8 +217,18 @@
             document.getElementById('str_type').innerHTML = "Structural Type: " + e.features[0].properties.structural_types;
             document.getElementById('foundation').innerHTML = "Foundation Type: " + e.features[0].properties.foundation_system;
             document.getElementById('facade').innerHTML = "Facade Material: " + e.features[0].properties.facade_material;
-            document.getElementById('BORP').innerHTML = "Part of BORP?: " + e.features[0].properties.borp_report;
-            document.getElementById('instrumentation').innerHTML = "Instrumented?: " + e.features[0].properties.instrumented;
+              
+            if(e.features[0].properties.borp_report === true){
+              document.getElementById('BORP').innerHTML = "Part of BORP?: Yes"
+            } else {
+              document.getElementById('BORP').innerHTML = "Part of BORP?: No"
+            }
+              
+            if(e.features[0].properties.instrumented === true){
+              document.getElementById('instrumentation').innerHTML = "Instrumented?: Yes"
+            } else {
+              document.getElementById('instrumentation').innerHTML = "Instrumented?: No"
+            }
 
           });
           map.on('mouseleave', 'buildings', function() {
