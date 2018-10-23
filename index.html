@@ -25,13 +25,20 @@
                  text-align: left;
           }
               
-          #map { position:absolute; top:0; bottom:0; width:100%; }
+
+          #map { 
+            position:absolute;
+            top:0;
+            bottom:0;
+            width:100%;
+          }
+
               
         .map-overlay {
           position: absolute;
           bottom: 0;
           right: 0;
-          background: rgba(255, 255, 255, 0.8);
+          background: rgba(255, 255, 255);
           margin-right: 20px;
           font-family: Arial, sans-serif;
           overflow: auto;
@@ -66,6 +73,19 @@
         height: 12px;
         margin-right: 5px;
         }
+
+        #sidebar {
+            position: absolute;
+            top: 15px;
+            left: 15px;
+            bottom: 15px;
+            width: 300px;
+            overflow: auto;
+            background: rgba(255, 255, 255, 0.95);
+            font-family: "Arial";
+            padding-left: 10px;
+        }
+
     </style>
 
 </head>
@@ -73,6 +93,26 @@
 <body>
 
     <div id='map'></div>
+    <div id='sidebar'>
+        <h2>Hover over the base of a building for more info:</h2>
+        <br>
+        <div id='name'></div>
+        <div id='address'></div>
+        <div id='date'></div>
+        <br>
+        <div id='height'></div>
+        <div id='nStories'></div>
+        <br>
+        <div id='occupancy'></div>
+        <div id='str_type'></div>
+        <br>
+        <div id='foundation'></div>
+        <div id='facade'></div>
+        <br>
+        <div id='BORP'></div>
+        <div id='instrumentation'></div>
+    </div>
+
 
     <div class='map-overlay' id='min_slider'>
         <h2>Construction Date:</h2>
@@ -97,6 +137,7 @@
             bearing: 0, // bearing in degrees
             zoom: 15 // starting zoom
         });
+
           
         function filterBy(min_date, max_date) {
           
@@ -106,6 +147,7 @@
           
           document.getElementById('max_constr_year').textContent = max_date;
           document.getElementById('min_constr_year').textContent = min_date;
+          
         }
           
         map.on('load', function() {
@@ -161,7 +203,42 @@
             item.appendChild(value);
             legend.appendChild(item);
           }
-        });
+
+          
+          
+          map.on('mousemove', 'buildings', function(e) {
+            
+            document.getElementById('name').innerHTML = "Name: " + e.features[0].properties.name;
+            document.getElementById('address').innerHTML = "Address: " + e.features[0].properties.address;
+            document.getElementById('date').innerHTML = "Date: " + e.features[0].properties.date;
+            document.getElementById('height').innerHTML = "Height: " + e.features[0].properties.height_ft + "ft";
+            document.getElementById('nStories').innerHTML = "Number of Stories: " + e.features[0].properties.stories_above_grade;
+            document.getElementById('occupancy').innerHTML = "Occupancy: " + e.features[0].properties.occupancy;
+            document.getElementById('str_type').innerHTML = "Structural Type: " + e.features[0].properties.structural_types;
+            document.getElementById('foundation').innerHTML = "Foundation Type: " + e.features[0].properties.foundation_system;
+            document.getElementById('facade').innerHTML = "Facade Material: " + e.features[0].properties.facade_material;
+            document.getElementById('BORP').innerHTML = "Part of BORP?: " + e.features[0].properties.borp_report;
+            document.getElementById('instrumentation').innerHTML = "Instrumented?: " + e.features[0].properties.instrumented;
+
+          });
+          map.on('mouseleave', 'buildings', function() {
+                map.getCanvas().style.cursor = '';
+            
+                document.getElementById('name').innerHTML = "";
+                document.getElementById('address').innerHTML = "";
+                document.getElementById('date').innerHTML = "";
+                document.getElementById('height').innerHTML = "";
+                document.getElementById('nStories').innerHTML = "";
+                document.getElementById('occupancy').innerHTML = "";
+                document.getElementById('str_type').innerHTML = "";
+                document.getElementById('foundation').innerHTML = "";
+                document.getElementById('facade').innerHTML = "";
+                document.getElementById('BORP').innerHTML = "";
+                document.getElementById('instrumentation').innerHTML = "";
+            });
+         }); 
+        
+
           
         // Add zoom and rotation controls to the map.
         map.addControl(new mapboxgl.NavigationControl());
