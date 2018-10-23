@@ -25,7 +25,12 @@
                  text-align: left;
           }
               
-          #map { position:absolute; top:0; bottom:0; width:100%; }
+          #map { 
+            position:absolute;
+            top:0;
+            bottom:0;
+            width:100%;
+          }
               
         .map-overlay {
           position: absolute;
@@ -70,6 +75,17 @@
            max-width: 400px;
            font: 12px/20px 'Helvetica Neue', Arial, Helvetica, sans-serif;
         }
+        #sidebar {
+            position: absolute;
+            top: 15px;
+            left: 15px;
+            bottom: 15px;
+            width: 250px;
+            overflow: auto;
+            background: rgba(255, 255, 255, 0.8);
+            font-family: "Arial";
+            padding-left: 10px;
+        }
     </style>
 
 </head>
@@ -77,6 +93,11 @@
 <body>
 
     <div id='map'></div>
+    <div id='sidebar'>
+        <h2>Hover of the base of a building for more info:</h2>
+        <div id='building-name'></div>
+        <div id='building-address'></div>
+    </div>
 
     <div class='map-overlay' id='min_slider'>
         <h2>Construction Date:</h2>
@@ -110,6 +131,7 @@
           
           document.getElementById('max_constr_year').textContent = max_date;
           document.getElementById('min_constr_year').textContent = min_date;
+          
         }
           
         map.on('load', function() {
@@ -166,7 +188,6 @@
             legend.appendChild(item);
           }
           
-          
           // Create a popup, but don't add it to the map yet.
             var popup = new mapboxgl.Popup({
                 closeButton: false,
@@ -187,6 +208,8 @@
             var sprinkler = e.features[0].properties.percent_sprinklered;
             var instrumentation = e.features[0].properties.instrumented;
             
+            document.getElementById('building-name').innerHTML = "Name: " + e.features[0].properties.name;
+            document.getElementById('building-address').innerHTML = "Address: " + e.features[0].properties.address;
             // Populate the popup and set its coordinates
                 // based on the feature found.
                 popup.setLngLat(e.lngLat)
@@ -196,9 +219,12 @@
           map.on('mouseleave', 'buildings', function() {
                 map.getCanvas().style.cursor = '';
                 popup.remove();
+            
+                document.getElementById('building-name').innerHTML = "";
+                document.getElementById('building-address').innerHTML = "";
             });
-          
-        });
+         }); 
+        
           
         // Add zoom and rotation controls to the map.
         map.addControl(new mapboxgl.NavigationControl());
