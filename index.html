@@ -36,7 +36,7 @@
           position: absolute;
           bottom: 0;
           right: 0;
-          background: rgba(255, 255, 255, 0.8);
+          background: rgba(255, 255, 255);
           margin-right: 20px;
           font-family: Arial, sans-serif;
           overflow: auto;
@@ -80,9 +80,9 @@
             top: 15px;
             left: 15px;
             bottom: 15px;
-            width: 250px;
+            width: 300px;
             overflow: auto;
-            background: rgba(255, 255, 255, 0.8);
+            background: rgba(255, 255, 255, 0.95);
             font-family: "Arial";
             padding-left: 10px;
         }
@@ -94,7 +94,8 @@
 
     <div id='map'></div>
     <div id='sidebar'>
-        <h2>Hover of the base of a building for more info:</h2>
+        <h2>Hover over the base of a building for more info:</h2>
+        <br>
         <div id='name'></div>
         <div id='address'></div>
         <div id='date'></div>
@@ -104,6 +105,12 @@
         <br>
         <div id='occupancy'></div>
         <div id='str_type'></div>
+        <br>
+        <div id='foundation'></div>
+        <div id='facade'></div>
+        <br>
+        <div id='BORP'></div>
+        <div id='instrumentation'></div>
     </div>
 
     <div class='map-overlay' id='min_slider'>
@@ -197,18 +204,6 @@
           
           
           map.on('mousemove', 'buildings', function(e) {
-            var name = e.features[0].properties.name;
-            var address = e.features[0].properties.address;
-            var date = e.features[0].properties.date;
-            var height = e.features[0].properties.height_ft;   
-            var n_stories = e.features[0].properties.stories_above_grade;
-            var occupancy = e.features[0].properties.occupancy;
-            var str_type = e.features[0].properties.structural_types;
-            var foundation = e.features[0].properties.foundation_system;
-            var facade = e.features[0].properties.facade_material;
-            var BORP = e.features[0].properties.borp_report;
-            var sprinkler = e.features[0].properties.percent_sprinklered;
-            var instrumentation = e.features[0].properties.instrumented;
             
             document.getElementById('name').innerHTML = "Name: " + e.features[0].properties.name;
             document.getElementById('address').innerHTML = "Address: " + e.features[0].properties.address;
@@ -217,7 +212,11 @@
             document.getElementById('nStories').innerHTML = "Number of Stories: " + e.features[0].properties.stories_above_grade;
             document.getElementById('occupancy').innerHTML = "Occupancy: " + e.features[0].properties.occupancy;
             document.getElementById('str_type').innerHTML = "Structural Type: " + e.features[0].properties.structural_types;
-            
+            document.getElementById('foundation').innerHTML = "Foundation Type: " + e.features[0].properties.foundation_system;
+            document.getElementById('facade').innerHTML = "Facade Material: " + e.features[0].properties.facade_material;
+            document.getElementById('BORP').innerHTML = "Part of BORP?: " + e.features[0].properties.borp_report;
+            document.getElementById('instrumentation').innerHTML = "Instrumented?: " + e.features[0].properties.instrumented;
+
           });
           map.on('mouseleave', 'buildings', function() {
                 map.getCanvas().style.cursor = '';
@@ -229,6 +228,10 @@
                 document.getElementById('nStories').innerHTML = "";
                 document.getElementById('occupancy').innerHTML = "";
                 document.getElementById('str_type').innerHTML = "";
+                document.getElementById('foundation').innerHTML = "";
+                document.getElementById('facade').innerHTML = "";
+                document.getElementById('BORP').innerHTML = "";
+                document.getElementById('instrumentation').innerHTML = "";
             });
          }); 
         
