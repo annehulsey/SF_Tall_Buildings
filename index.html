@@ -31,6 +31,20 @@
             text-align: left;
         }
 
+        a {
+            text-decoration: underline;
+        }
+        a:link {
+        color: darkcyan;
+        }
+        a:visited {
+        color: Purple;
+        }
+        a:hover {
+        color: #366c87;
+        }
+
+
         #map {
             position: absolute;
             top: 0;
@@ -49,37 +63,32 @@
             border-radius: 3px;
         }
 
-        #max_slider {
-            top: 0;
-            padding: 10px;
-            height: 100px;
-            margin-top: 150px;
-            width: 200px;
-        }
 
-        #min_slider {
-            top: 0;
-            padding: 10px;
-            height: 130px;
-            margin-top: 20px;
-            width: 200px;
-        }
 
+        #layer_toggle {
+            position: absolute;
+            top: 25px;
+            margin-right: 20px;
+            height: 85px;
+            width: 413px;
+            background: rgba(255, 255, 255, 1);
+            padding-top: 5px;
+            padding-left: 30px;
+        }
         #legend_str {
             padding: 10px;
             line-height: 30px;
             height: 140px;
             right: 213px;
-            margin-bottom: 25px;
+            top: 100px;
             width: 200px;
         }
-
         #legend_occ {
             padding: 10px;
             line-height: 20px;
             height: 140px;
-            margin-bottom: 25px;
-            width: 200px;
+            top: 100px;
+            width: 210px;
         }
 
         .legend-key {
@@ -90,27 +99,54 @@
             margin-right: 5px;
         }
 
+        #min_slider {
+            top: 250px;
+            padding: 10px;
+            height: 180px;
+            margin-top: 20px;
+            width: 190px;
+        }
+        #max_slider {
+            top: 250px;
+            padding: 10px;
+            height: 100px;
+            margin-top: 165px;
+            width: 190px;
+        }
+
+
         #sidebar {
             position: absolute;
             top: 15px;
             left: 15px;
-            bottom: 15px;
+            height: 500px;
             width: 300px;
             overflow: auto;
             background: rgba(255, 255, 255, 0.95);
             font-family: "Arial";
+            padding-left: 20px;
+        }
+
+        #map_source {
+            position: absolute;
+            margin-bottom: 25px;
+            height: 190px;
+            margin-right: 20px;
+            width: 500px;
+            background: rgba(255, 255, 255, 0.85);
+            font-family: "Arial";
             padding-left: 10px;
         }
 
-        #layer_toggle {
+        #map_credits {
             position: absolute;
-            bottom: 170px;
-            margin-right: 20px;
-            height: 80px;
-            width: 413px;
-            background: rgba(255, 255, 255, 1);
-            padding-top: 5px;
-            padding-left: 56px;
+            margin-bottom: 35px;
+            height: 93px;
+            left: 50px;
+            width: 220px;
+            background: rgba(255, 255, 255, 0.85);
+            font-family: "Arial";
+            padding-left: 10px;
         }
 
     </style>
@@ -120,7 +156,7 @@
 <body>
 
 <div id='map'></div>
-<div id='sidebar'>
+<div class='map-overlay' id='sidebar'>
     <h2>Hover over the base of a building for more info:</h2>
     <br>
     <div id='name'></div>
@@ -142,7 +178,8 @@
 
 
 <div class='map-overlay' id='min_slider'>
-    <h2>Construction Date:</h2>
+    <h3><i>Filter By</i></h3>
+    <h2>Construction Date</h2>
     <h3>After: <label id='min_constr_year'> 1880 </label></h3>
     <input id='slider' type='range' min='1880' max='2020' step='1' value='1880'/>
 </div>
@@ -156,11 +193,34 @@
 <div class='map-overlay' id='legend_occ'></div>
 
 <div class='map-overlay' id='layer_toggle'>
-    <h2>Select criteria for building symbology</h2>
-    <input id='str_symbol' type='radio' name='rtoggle' value='Structural System' checked='checked'>
+    <h2>&nbsp Select Criteria for Building Symbology</h2>
+    <h3><input id='str_symbol' type='radio' name='rtoggle' value='Structural System' checked='checked'>
     <label for='str_symbol'>Structural System</label>
     <input id='occ_sybmol' type='radio' name='rtoggle' value='Occupancy'>
-    <label for='occ_sybmol'>Occupancy Type</label>
+        <label for='occ_sybmol'>Occupancy Type</label></h3>
+</div>
+
+<div class='map-overlay' id='map_source'>
+    <h2>Map Source:</h2>
+    <p>This map was created for interactive visualization of San Francisco's
+        tall buildings (240 ft and above) via
+        <a href="https://data.sfgov.org/Housing-and-Buildings/Tall-Building-Inventory/5kya-mfst">
+            open source data</a>
+        from
+        <a href="https://datasf.org/"> dataSF.org</a>
+    </p>
+    <p>The dataset was compiled by the Applied Technology Council's ATC&nbsp119-1 project team
+        in support of the San Francisco Office of Resilience and Capital Planning's
+        <a href="http://onesanfrancisco.org/sites/default/files/inline-files/Tall%20Buildings%20Safety%20Strategy%20-%20CEC%20-%2010.02.18_forDIGITAL.pdf">
+            Tall Buildings Safety Strategy</a>
+    </p>
+</div>
+
+<div class='map-overlay' id='map_credits'>
+    <p>Created by Anne Hulsey,
+       Stanford PhD candidate,
+       ATC&nbsp119-1 project member.
+    </p>
 </div>
 
 
@@ -352,7 +412,7 @@
 
 
     // Add zoom and rotation controls to the map.
-    map.addControl(new mapboxgl.NavigationControl());
+    map.addControl(new mapboxgl.NavigationControl(), 'bottom-left');
 </script>
 
 </body>
