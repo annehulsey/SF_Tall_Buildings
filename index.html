@@ -2,76 +2,92 @@
 <html>
 
 <head>
-    <meta charset='utf-8' />
+    <meta charset='utf-8'/>
     <title>Tall Buildings In San Francisco</title>
-    <meta name='viewport' content='initial-scale=1,maximum-scale=1,user-scalable=no' />
+    <meta name='viewport' content='initial-scale=1,maximum-scale=1,user-scalable=no'/>
     <script src='https://api.tiles.mapbox.com/mapbox-gl-js/v0.50.0/mapbox-gl.js'></script>
-    <link href='https://api.tiles.mapbox.com/mapbox-gl-js/v0.50.0/mapbox-gl.css' rel='stylesheet' />
+    <link href='https://api.tiles.mapbox.com/mapbox-gl-js/v0.50.0/mapbox-gl.css' rel='stylesheet'/>
     <link href="https://api.mapbox.com/mapbox-assembly/v0.21.0/assembly.min.css" rel="stylesheet">
     <script async defer src="https://api.mapbox.com/mapbox-assembly/v0.21.0/assembly.js"></script>
 
     <style>
-        body { margin:0; padding:0; }
-                
-          h2,h3 {margin: 10px;
-                 font-size: 1.2em;
-          }
-          
-          h3    {font-size: 1.1em;
-          }
-          
-          p     {font-size: 1em;
-                 margin: 10px;
-                 text-align: left;
-          }
-              
+        body {
+            margin: 0;
+            padding: 0;
+        }
 
-          #map { 
-            position:absolute;
-            top:0;
-            bottom:0;
-            width:100%;
-          }
+        h2, h3 {
+            margin: 10px;
+            font-size: 1.2em;
+        }
 
-              
+        h3 {
+            font-size: 1.1em;
+        }
+
+        p {
+            font-size: 1em;
+            margin: 10px;
+            text-align: left;
+        }
+
+        #map {
+            position: absolute;
+            top: 0;
+            bottom: 0;
+            width: 100%;
+        }
+
         .map-overlay {
-          position: absolute;
-          bottom: 0;
-          right: 0;
-          background: rgba(255, 255, 255);
-          margin-right: 20px;
-          font-family: Arial, sans-serif;
-          overflow: auto;
-          border-radius: 3px;
+            position: absolute;
+            bottom: 0;
+            right: 0;
+            background: rgba(255, 255, 255, 1);
+            margin-right: 20px;
+            font-family: Arial, sans-serif;
+            overflow: auto;
+            border-radius: 3px;
         }
+
         #max_slider {
-          top: 0;
-          padding: 10px;
-          height: 100px;
-          margin-top: 150px;
-          width: 200px;
+            top: 0;
+            padding: 10px;
+            height: 100px;
+            margin-top: 150px;
+            width: 200px;
         }
+
         #min_slider {
-          top: 0;
-          padding: 10px;
-          height: 130px;
-          margin-top: 20px;
-          width: 200px;
-        }  
-        #legend {
-          top: 1;
-          padding: 10px;
-          line-height: 20px;
-          height: 100px;
-          margin-bottom: 50px;
-          width: 200px;  
-        } 
+            top: 0;
+            padding: 10px;
+            height: 130px;
+            margin-top: 20px;
+            width: 200px;
+        }
+
+        #legend_str {
+            padding: 10px;
+            line-height: 30px;
+            height: 140px;
+            right: 213px;
+            margin-bottom: 25px;
+            width: 200px;
+        }
+
+        #legend_occ {
+            padding: 10px;
+            line-height: 20px;
+            height: 140px;
+            margin-bottom: 25px;
+            width: 200px;
+        }
+
         .legend-key {
-        display: inline-block;
-        border-radius: 20%;
-        width: 18px;
-        height: 12px;
-        margin-right: 5px;
+            display: inline-block;
+            border-radius: 20%;
+            width: 18px;
+            height: 12px;
+            margin-right: 5px;
         }
 
         #sidebar {
@@ -86,111 +102,180 @@
             padding-left: 10px;
         }
 
+        #layer_toggle {
+            position: absolute;
+            bottom: 170px;
+            margin-right: 20px;
+            height: 80px;
+            width: 413px;
+            background: rgba(255, 255, 255, 1);
+            padding-top: 5px;
+            padding-left: 56px;
+        }
+
     </style>
 
 </head>
 
 <body>
 
-    <div id='map'></div>
-    <div id='sidebar'>
-        <h2>Hover over the base of a building for more info:</h2>
-        <br>
-        <div id='name'></div>
-        <div id='address'></div>
-        <div id='date'></div>
-        <br>
-        <div id='height'></div>
-        <div id='nStories'></div>
-        <br>
-        <div id='occupancy'></div>
-        <div id='str_type'></div>
-        <br>
-        <div id='foundation'></div>
-        <div id='facade'></div>
-        <br>
-        <div id='BORP'></div>
-        <div id='instrumentation'></div>
-    </div>
+<div id='map'></div>
+<div id='sidebar'>
+    <h2>Hover over the base of a building for more info:</h2>
+    <br>
+    <div id='name'></div>
+    <div id='address'></div>
+    <div id='date'></div>
+    <br>
+    <div id='height'></div>
+    <div id='nStories'></div>
+    <br>
+    <div id='occupancy'></div>
+    <div id='str_type'></div>
+    <br>
+    <div id='foundation'></div>
+    <div id='facade'></div>
+    <br>
+    <div id='BORP'></div>
+    <div id='instrumentation'></div>
+</div>
 
 
-    <div class='map-overlay' id='min_slider'>
-        <h2>Construction Date:</h2>
-        <h3>After: <label id='min_constr_year'> 1880 </label> </h3>
-        <input id='slider' type='range' min='1880' max='2020' step='1' value='1880' />
-    </div>
-    <div class='map-overlay' id='max_slider'>
-        <h3>Prior to: <label id='max_constr_year'> 2020 </label> </h3>
-        <input id='slider' type='range' min='1880' max='2020' step='1' value='2020' />
-    </div>
-    <div class='map-overlay' id='legend'></div>
+<div class='map-overlay' id='min_slider'>
+    <h2>Construction Date:</h2>
+    <h3>After: <label id='min_constr_year'> 1880 </label></h3>
+    <input id='slider' type='range' min='1880' max='2020' step='1' value='1880'/>
+</div>
+
+<div class='map-overlay' id='max_slider'>
+    <h3>Prior to: <label id='max_constr_year'> 2020 </label></h3>
+    <input id='slider' type='range' min='1880' max='2020' step='1' value='2020'/>
+</div>
+
+<div class='map-overlay' id='legend_str'></div>
+<div class='map-overlay' id='legend_occ'></div>
+
+<div class='map-overlay' id='layer_toggle'>
+    <h2>Select criteria for building symbology</h2>
+    <input id='str_symbol' type='radio' name='rtoggle' value='Structural System' checked='checked'>
+    <label for='str_symbol'>Structural System</label>
+    <input id='occ_sybmol' type='radio' name='rtoggle' value='Occupancy'>
+    <label for='occ_sybmol'>Occupancy Type</label>
+</div>
 
 
+<script>
+    mapboxgl.accessToken = 'pk.eyJ1IjoiYWh1bHNleSIsImEiOiJjamhtaGNuNjIwemoyM2RyMG5qNzhhYnhmIn0.elxp9WxADMJqTFg3R7h6fQ';
+    var map = new mapboxgl.Map({
+        container: 'map', // container id
+        style: 'mapbox://styles/ahulsey/cjneyfjr52q7k2st6m6ky9w2t', // stylesheet location
+        center: [-122.399, 37.789], // starting position [lng, lat]
+        pitch: 60, // pitch in degrees
+        bearing: 0, // bearing in degrees
+        zoom: 15 // starting zoom
+    });
 
-    <script>
-        mapboxgl.accessToken = 'pk.eyJ1IjoiYWh1bHNleSIsImEiOiJjamhtaGNuNjIwemoyM2RyMG5qNzhhYnhmIn0.elxp9WxADMJqTFg3R7h6fQ';
-        var map = new mapboxgl.Map({
-            container: 'map', // container id
-            style: 'mapbox://styles/ahulsey/cjneyfjr52q7k2st6m6ky9w2t', // stylesheet location
-            center: [-122.399, 37.789], // starting position [lng, lat]
-            pitch: 60, // pitch in degrees
-            bearing: 0, // bearing in degrees
-            zoom: 15 // starting zoom
+
+    function filterBy(min_date, max_date) {
+
+        var max_filter = ['<=', ["to-number", ["get", "date"]], max_date];
+        var min_filter = ['>=', ["to-number", ["get", "date"]], min_date];
+        map.setFilter('StrType', ["all", max_filter, min_filter]);
+        map.setFilter('OccType', ["all", max_filter, min_filter]);
+
+        document.getElementById('max_constr_year').textContent = max_date;
+        document.getElementById('min_constr_year').textContent = min_date;
+
+    }
+
+    map.on('load', function () {
+        map.addSource('buildings', {
+            type: 'geojson',
+            data: 'https://data.sfgov.org/resource/5kya-mfst.geojson'
         });
 
-          
-        function filterBy(min_date, max_date) {
-          
-          var max_filter = ['<=', ["to-number", ["get", "date"] ], max_date];
-          var min_filter = ['>=', ["to-number", ["get", "date"] ], min_date];
-          map.setFilter('buildings', ["all", max_filter, min_filter]);
-          
-          document.getElementById('max_constr_year').textContent = max_date;
-          document.getElementById('min_constr_year').textContent = min_date;
-          
-        }
-          
-        map.on('load', function() {
-            map.addLayer({
-                'id': 'buildings',
-                'type': 'fill-extrusion',
-                'source': {
-                    'type': 'geojson',
-                    'data': 'https://data.sfgov.org/resource/5kya-mfst.geojson'
-                },
-                'filter': ['>=', ["to-number", ["get", "height_ft"] ], 240],
-                'paint': {
-                    'fill-extrusion-color': ["match",
-                                              ["get", "structural_types"],
-                                               "RC Shear Wall",
-                                                "#c45612",
-                                                "Steel Braced Frame",
-                                                "#366c87",
-                                                "Steel Moment Frame",
-                                                "#468736",
-                                                "#5f5858"
-                                             ],
-                  
-                    'fill-extrusion-height': ["/", ["to-number", ["get", "height_ft"] ],  3.28],
-                    'fill-extrusion-base': 0,
-                }
-            });
-                document.getElementById('max_slider').addEventListener('input', function(e) {
-                    var max_date = parseInt(e.target.value, 10);
-                    var min_date = Number(document.getElementById('min_constr_year').textContent)
-                    filterBy(min_date, max_date);
-                });
-          
-                document.getElementById('min_slider').addEventListener('input', function(e) {
-                    var min_date = parseInt(e.target.value, 10);
-                    var max_date = Number(document.getElementById('max_constr_year').textContent)
-                    filterBy(min_date, max_date);
-                });
-          
-          var str_types = ['RC Shear Wall', 'Steel Moment Frame', 'Steel Braced Frame', 'Unknown'];
-          var str_type_colors = ['#c45612',            '#468736',            '#366c87', '#5f5858'];
-          
-          for (i = 0; i < str_types.length; i++) {
+        map.addLayer({
+            'id': 'StrType',
+            'type': 'fill-extrusion',
+            'source': 'buildings',
+            'filter': ['>=', ["to-number", ["get", "height_ft"]], 240],
+            'paint': {
+                'fill-extrusion-color': ["match",
+                    ["get", "structural_types"],
+                    "RC Shear Wall",
+                    "#c45612",
+                    "Steel Braced Frame",
+                    "#366c87",
+                    "Steel Moment Frame",
+                    "#468736",
+                    "#5f5858"
+                ],
+
+                'fill-extrusion-height': ["/", ["to-number", ["get", "height_ft"]], 3.28],
+                'fill-extrusion-base': 0
+            }
+        });
+        map.addLayer({
+            'id': 'OccType',
+            'type': 'fill-extrusion',
+            'source': 'buildings',
+            'layout': {
+            'visibility': 'none'
+            },
+            'filter': ['>=', ["to-number", ["get", "height_ft"]], 240],
+            'paint': {
+                'fill-extrusion-color': ["match",
+                    ["get", "occupancy"],
+                    "Residential",
+                    "#bb1b1b",
+                    "Hotels, Visitor Services",
+                    "#d86464",
+                    "Mixed Uses (With Residential)",
+                    "#f9b0b0",
+                    "Mixed Uses (Without Residential)",
+                    "#9dd4dc",
+                    "Cultural, Institutional, Educational",
+                    "#5da3ae",
+                    "Office (Management, Information, Professional Services)",
+                    "#1e7380",
+                    "#5f5858"
+                ],
+
+                'fill-extrusion-height': ["/", ["to-number", ["get", "height_ft"]], 3.28],
+                'fill-extrusion-base': 0
+            }
+        });
+
+        document.getElementById('max_slider').addEventListener('input', function (e) {
+            var max_date = parseInt(e.target.value, 10);
+            var min_date = Number(document.getElementById('min_constr_year').textContent);
+            filterBy(min_date, max_date);
+        });
+
+        document.getElementById('min_slider').addEventListener('input', function (e) {
+            var min_date = parseInt(e.target.value, 10);
+            var max_date = Number(document.getElementById('max_constr_year').textContent);
+            filterBy(min_date, max_date);
+        });
+
+        document.getElementById('layer_toggle').addEventListener('change', function(e) {
+            var layer = e.target.value;
+
+            if (layer === 'Structural System') {
+                map.setLayoutProperty('StrType', 'visibility', 'visible');
+                map.setLayoutProperty('OccType', 'visibility', 'none');
+            } else if (layer === 'Occupancy') {
+                map.setLayoutProperty('StrType', 'visibility', 'none');
+                map.setLayoutProperty('OccType', 'visibility', 'visible');
+            } else {
+                console.log('error')
+            }
+        });
+
+        var str_types = ['RC Shear Wall', 'Steel Moment Frame', 'Steel Braced Frame', 'Unknown'];
+        var str_type_colors = ['#c45612', '#468736', '#366c87', '#5f5858'];
+
+        for (i = 0; i < str_types.length; i++) {
             var str_type = str_types[i];
             var color = str_type_colors[i];
             var item = document.createElement('div');
@@ -201,58 +286,74 @@
             value.innerHTML = str_type;
             item.appendChild(key);
             item.appendChild(value);
-            legend.appendChild(item);
-          }
+            legend_str.appendChild(item);
+        }
 
-          
-          
-          map.on('mousemove', 'buildings', function(e) {
-            
+        var occ_types = ['Office', 'Cultural, Inst., Edu.', 'Mixed Uses (No Res)', 'Mixed Uses (With Res)', 'Hotels, Visitor Services', 'Residential'];
+        var occ_type_colors = ['#1e7380', '#5da3ae', '#9dd4dc', '#f9b0b0', '#d86464','#bb1b1b'];
+
+        for (i = 0; i < occ_types.length; i++) {
+            var occ_type = occ_types[i];
+            var color = occ_type_colors[i];
+            var item = document.createElement('div');
+            var key = document.createElement('span');
+            key.className = 'legend-key';
+            key.style.backgroundColor = color;
+            var value = document.createElement('span');
+            value.innerHTML = occ_type;
+            item.appendChild(key);
+            item.appendChild(value);
+            legend_occ.appendChild(item);
+        }
+
+
+        map.on('mouseenter', 'StrType', function (e) {
+            map.getCanvas().style.cursor = 'pointer';
+
             document.getElementById('name').innerHTML = "Name: " + e.features[0].properties.name;
             document.getElementById('address').innerHTML = "Address: " + e.features[0].properties.address;
             document.getElementById('date').innerHTML = "Date: " + e.features[0].properties.date;
-            document.getElementById('height').innerHTML = "Height: " + e.features[0].properties.height_ft + "ft";
+            document.getElementById('height').innerHTML = "Height: " + e.features[0].properties.height_ft + " ft";
             document.getElementById('nStories').innerHTML = "Number of Stories: " + e.features[0].properties.stories_above_grade;
             document.getElementById('occupancy').innerHTML = "Occupancy: " + e.features[0].properties.occupancy;
             document.getElementById('str_type').innerHTML = "Structural Type: " + e.features[0].properties.structural_types;
             document.getElementById('foundation').innerHTML = "Foundation Type: " + e.features[0].properties.foundation_system;
             document.getElementById('facade').innerHTML = "Facade Material: " + e.features[0].properties.facade_material;
-              
-            if(e.features[0].properties.borp_report === true){
-              document.getElementById('BORP').innerHTML = "Part of BORP?: Yes"
+
+            if (e.features[0].properties.borp_report === true) {
+                document.getElementById('BORP').innerHTML = "Part of BORP?: Yes"
             } else {
-              document.getElementById('BORP').innerHTML = "Part of BORP?: No"
-            }
-              
-            if(e.features[0].properties.instrumented === true){
-              document.getElementById('instrumentation').innerHTML = "Instrumented?: Yes"
-            } else {
-              document.getElementById('instrumentation').innerHTML = "Instrumented?: No"
+                document.getElementById('BORP').innerHTML = "Part of BORP?: No"
             }
 
-          });
-          map.on('mouseleave', 'buildings', function() {
-                map.getCanvas().style.cursor = '';
-            
-                document.getElementById('name').innerHTML = "";
-                document.getElementById('address').innerHTML = "";
-                document.getElementById('date').innerHTML = "";
-                document.getElementById('height').innerHTML = "";
-                document.getElementById('nStories').innerHTML = "";
-                document.getElementById('occupancy').innerHTML = "";
-                document.getElementById('str_type').innerHTML = "";
-                document.getElementById('foundation').innerHTML = "";
-                document.getElementById('facade').innerHTML = "";
-                document.getElementById('BORP').innerHTML = "";
-                document.getElementById('instrumentation').innerHTML = "";
-            });
-         }); 
-        
+            if (e.features[0].properties.instrumented === true) {
+                document.getElementById('instrumentation').innerHTML = "Instrumented?: Yes"
+            } else {
+                document.getElementById('instrumentation').innerHTML = "Instrumented?: No"
+            }
 
-          
-        // Add zoom and rotation controls to the map.
-        map.addControl(new mapboxgl.NavigationControl());
-    </script>
+        });
+        map.on('mouseleave', 'StrType', function () {
+            map.getCanvas().style.cursor = '';
+
+            document.getElementById('name').innerHTML = "";
+            document.getElementById('address').innerHTML = "";
+            document.getElementById('date').innerHTML = "";
+            document.getElementById('height').innerHTML = "";
+            document.getElementById('nStories').innerHTML = "";
+            document.getElementById('occupancy').innerHTML = "";
+            document.getElementById('str_type').innerHTML = "";
+            document.getElementById('foundation').innerHTML = "";
+            document.getElementById('facade').innerHTML = "";
+            document.getElementById('BORP').innerHTML = "";
+            document.getElementById('instrumentation').innerHTML = "";
+        });
+    });
+
+
+    // Add zoom and rotation controls to the map.
+    map.addControl(new mapboxgl.NavigationControl());
+</script>
 
 </body>
 
