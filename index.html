@@ -34,16 +34,18 @@
         a {
             text-decoration: underline;
         }
+
         a:link {
-        color: darkcyan;
-        }
-        a:visited {
-        color: Purple;
-        }
-        a:hover {
-        color: #366c87;
+            color: darkcyan;
         }
 
+        a:visited {
+            color: Purple;
+        }
+
+        a:hover {
+            color: #366c87;
+        }
 
         #map {
             position: absolute;
@@ -63,8 +65,6 @@
             border-radius: 3px;
         }
 
-
-
         #layer_toggle {
             position: absolute;
             top: 25px;
@@ -75,6 +75,7 @@
             padding-top: 5px;
             padding-left: 30px;
         }
+
         #legend_str {
             padding: 10px;
             line-height: 30px;
@@ -83,6 +84,7 @@
             top: 100px;
             width: 200px;
         }
+
         #legend_occ {
             padding: 10px;
             line-height: 20px;
@@ -106,6 +108,7 @@
             margin-top: 20px;
             width: 190px;
         }
+
         #max_slider {
             top: 250px;
             padding: 10px;
@@ -113,7 +116,6 @@
             margin-top: 165px;
             width: 190px;
         }
-
 
         #sidebar {
             position: absolute;
@@ -156,6 +158,30 @@
 <body>
 
 <div id='map'></div>
+
+<div class='map-overlay' id='map_source'>
+    <h2>Map Source:</h2>
+    <p>This map was created for interactive visualization of San Francisco's
+        tall buildings (240 ft and above) via
+        <a href="https://data.sfgov.org/Housing-and-Buildings/Tall-Building-Inventory/5kya-mfst">
+            open source data</a>
+        from
+        <a href="https://datasf.org/"> dataSF.org</a>
+    </p>
+    <p>The dataset was compiled by the Applied Technology Council's ATC&nbsp119-1 project team
+        in support of the San Francisco Office of Resilience and Capital Planning's
+        <a href="http://onesanfrancisco.org/sites/default/files/inline-files/Tall%20Buildings%20Safety%20Strategy%20-%20CEC%20-%2010.02.18_forDIGITAL.pdf">
+            Tall Buildings Safety Strategy</a>
+    </p>
+</div>
+
+<div class='map-overlay' id='map_credits'>
+    <p>Created by Anne Hulsey,
+        Stanford PhD candidate,
+        ATC&nbsp119-1 project member.
+    </p>
+</div>
+
 <div class='map-overlay' id='sidebar'>
     <h2>Hover over the base of a building for more info:</h2>
     <br>
@@ -195,32 +221,9 @@
 <div class='map-overlay' id='layer_toggle'>
     <h2>&nbsp Select Criteria for Building Symbology</h2>
     <h3><input id='str_symbol' type='radio' name='rtoggle' value='Structural System' checked='checked'>
-    <label for='str_symbol'>Structural System</label>
-    <input id='occ_sybmol' type='radio' name='rtoggle' value='Occupancy'>
+        <label for='str_symbol'>Structural System</label>
+        <input id='occ_sybmol' type='radio' name='rtoggle' value='Occupancy'>
         <label for='occ_sybmol'>Occupancy Type</label></h3>
-</div>
-
-<div class='map-overlay' id='map_source'>
-    <h2>Map Source:</h2>
-    <p>This map was created for interactive visualization of San Francisco's
-        tall buildings (240 ft and above) via
-        <a href="https://data.sfgov.org/Housing-and-Buildings/Tall-Building-Inventory/5kya-mfst">
-            open source data</a>
-        from
-        <a href="https://datasf.org/"> dataSF.org</a>
-    </p>
-    <p>The dataset was compiled by the Applied Technology Council's ATC&nbsp119-1 project team
-        in support of the San Francisco Office of Resilience and Capital Planning's
-        <a href="http://onesanfrancisco.org/sites/default/files/inline-files/Tall%20Buildings%20Safety%20Strategy%20-%20CEC%20-%2010.02.18_forDIGITAL.pdf">
-            Tall Buildings Safety Strategy</a>
-    </p>
-</div>
-
-<div class='map-overlay' id='map_credits'>
-    <p>Created by Anne Hulsey,
-       Stanford PhD candidate,
-       ATC&nbsp119-1 project member.
-    </p>
 </div>
 
 
@@ -280,7 +283,7 @@
             'type': 'fill-extrusion',
             'source': 'buildings',
             'layout': {
-            'visibility': 'none'
+                'visibility': 'none'
             },
             'filter': ['>=', ["to-number", ["get", "height_ft"]], 240],
             'paint': {
@@ -318,7 +321,7 @@
             filterBy(min_date, max_date);
         });
 
-        document.getElementById('layer_toggle').addEventListener('change', function(e) {
+        document.getElementById('layer_toggle').addEventListener('change', function (e) {
             var layer = e.target.value;
 
             if (layer === 'Structural System') {
@@ -350,7 +353,7 @@
         }
 
         var occ_types = ['Office', 'Cultural, Inst., Edu.', 'Mixed Uses (No Res)', 'Mixed Uses (With Res)', 'Hotels, Visitor Services', 'Residential'];
-        var occ_type_colors = ['#1e7380', '#5da3ae', '#9dd4dc', '#f9b0b0', '#d86464','#bb1b1b'];
+        var occ_type_colors = ['#1e7380', '#5da3ae', '#9dd4dc', '#f9b0b0', '#d86464', '#bb1b1b'];
 
         for (i = 0; i < occ_types.length; i++) {
             var occ_type = occ_types[i];
