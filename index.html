@@ -73,7 +73,7 @@
             width: 413px;
             background: rgba(255, 255, 255, 1);
             padding-top: 5px;
-            padding-left: 30px;
+            padding-left: 15px;
         }
 
         #legend_str {
@@ -151,6 +151,18 @@
             padding-left: 10px;
         }
 
+        #camera_reset {
+            position: absolute;
+            margin-bottom: 140px;
+            height: 50px;
+            left: 10px;
+            width: 260px;
+            background: white;
+            font-family: "Arial";
+            padding-left: 30px;
+            border: solid darkcyan;
+        }
+
     </style>
 
 </head>
@@ -163,14 +175,15 @@
     <h2>Map Source:</h2>
     <p>This map was created for interactive visualization of San Francisco's
         tall buildings (240 ft and above) via
-        <a href="https://data.sfgov.org/Housing-and-Buildings/Tall-Building-Inventory/5kya-mfst">
+        <a href="https://data.sfgov.org/Housing-and-Buildings/Tall-Building-Inventory/5kya-mfst" target="_blank">
             open source data</a>
         from
-        <a href="https://datasf.org/"> dataSF.org</a>
+        <a href="https://datasf.org/" target="_blank"> dataSF.org</a>
     </p>
     <p>The dataset was compiled by the Applied Technology Council's ATC&nbsp119-1 project team
         in support of the San Francisco Office of Resilience and Capital Planning's
-        <a href="http://onesanfrancisco.org/sites/default/files/inline-files/Tall%20Buildings%20Safety%20Strategy%20-%20CEC%20-%2010.02.18_forDIGITAL.pdf">
+        <a href="http://onesanfrancisco.org/sites/default/files/inline-files/Tall%20Buildings%20Safety%20Strategy%20-%20CEC%20-%2010.02.18_forDIGITAL.pdf"
+           target="_blank">
             Tall Buildings Safety Strategy</a>
     </p>
 </div>
@@ -180,6 +193,11 @@
         Stanford PhD candidate,
         ATC&nbsp119-1 project member.
     </p>
+</div>
+
+<div class='map-overlay' id='camera_reset'>
+    <h3>Click to reset viewpoint
+    </h3>
 </div>
 
 <div class='map-overlay' id='sidebar'>
@@ -219,9 +237,9 @@
 <div class='map-overlay' id='legend_occ'></div>
 
 <div class='map-overlay' id='layer_toggle'>
-    <h2>&nbsp Select Criteria for Building Symbology</h2>
+    <h2>&nbsp&nbsp&nbsp&nbsp Select Criteria for Building Symbology</h2>
     <h3><input id='str_symbol' type='radio' name='rtoggle' value='Structural System' checked='checked'>
-        <label for='str_symbol'>Structural System</label>
+        <label for='str_symbol'>Structural System&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp</label>
         <input id='occ_sybmol' type='radio' name='rtoggle' value='Occupancy'>
         <label for='occ_sybmol'>Occupancy Type</label></h3>
 </div>
@@ -229,13 +247,19 @@
 
 <script>
     mapboxgl.accessToken = 'pk.eyJ1IjoiYWh1bHNleSIsImEiOiJjamhtaGNuNjIwemoyM2RyMG5qNzhhYnhmIn0.elxp9WxADMJqTFg3R7h6fQ';
+    var bounds = [
+        [-122.45, 37.775], // Southwest coordinates
+        [-122.35, 37.800]  // Northeast coordinates
+    ];
+
     var map = new mapboxgl.Map({
         container: 'map', // container id
         style: 'mapbox://styles/ahulsey/cjneyfjr52q7k2st6m6ky9w2t', // stylesheet location
         center: [-122.399, 37.789], // starting position [lng, lat]
         pitch: 60, // pitch in degrees
         bearing: 0, // bearing in degrees
-        zoom: 15 // starting zoom
+        zoom: 15, // starting zoom
+        maxBounds: bounds // set bounds as max
     });
 
 
@@ -328,7 +352,7 @@
                 map.setLayoutProperty('StrType', 'visibility', 'visible');
                 map.setLayoutProperty('OccType', 'visibility', 'none');
             } else if (layer === 'Occupancy') {
-                map.setLayoutProperty('StrType', 'visibility', 'none');
+                map.setLayoutProperty('StrType', 'visibility', 'visible');
                 map.setLayoutProperty('OccType', 'visibility', 'visible');
             } else {
                 console.log('error')
@@ -410,6 +434,15 @@
             document.getElementById('facade').innerHTML = "";
             document.getElementById('BORP').innerHTML = "";
             document.getElementById('instrumentation').innerHTML = "";
+        });
+
+        document.getElementById('camera_reset').addEventListener('click', function () {
+            map.flyTo({
+                center: [-122.399, 37.789], // starting position [lng, lat]
+                pitch: 60, // pitch in degrees
+                bearing: 0, // bearing in degrees
+                zoom: 15, // starting zoom
+            });
         });
     });
 
