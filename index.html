@@ -44,7 +44,7 @@
         }
 
         a:hover {
-            color: #366c87;
+            color: #005D64;
         }
 
         #map {
@@ -121,7 +121,7 @@
             position: absolute;
             top: 15px;
             left: 15px;
-            height: 500px;
+            height: 475px;
             width: 300px;
             overflow: auto;
             background: rgba(255, 255, 255, 0.95);
@@ -159,7 +159,7 @@
             width: 260px;
             background: white;
             font-family: "Arial";
-            padding-left: 30px;
+            padding-left: 20px;
             border: solid darkcyan;
         }
 
@@ -196,13 +196,12 @@
 </div>
 
 <div class='map-overlay' id='camera_reset'>
-    <h3>Click to reset viewpoint
+    <h3>Click to reset the viewpoint
     </h3>
 </div>
 
 <div class='map-overlay' id='sidebar'>
-    <h2>Hover over the base of a building for more info:</h2>
-    <br>
+    <h2>Hover over a building for info:</h2>
     <div id='name'></div>
     <div id='address'></div>
     <div id='date'></div>
@@ -275,10 +274,17 @@
 
     }
 
+    function HoverID(hoveredBuildingID) {
+        map.setFilter('Hover', )
+    }
+
+    var hoveredBuildingID = null;
+
     map.on('load', function () {
         map.addSource('buildings', {
             type: 'geojson',
-            data: 'https://data.sfgov.org/resource/5kya-mfst.geojson'
+            data: 'https://data.sfgov.org/resource/5kya-mfst.geojson',
+            generateId: true
         });
 
         map.addLayer({
@@ -328,6 +334,23 @@
                     "#5f5858"
                 ],
 
+                'fill-extrusion-height': ["/", ["to-number", ["get", "height_ft"]], 3.28],
+                'fill-extrusion-base': 0
+            }
+        });
+
+
+        map.addLayer({
+            'id': 'Hover',
+            'type': 'fill-extrusion',
+            'source': 'buildings',
+            'filter': ['>=', ["to-number", ["get", "height_ft"]], 240],
+            'layout': {
+                'visibility': 'none'
+            },
+            'paint': {
+                'fill-extrusion-color': "#000000",
+                'fill-extrusion-opacity': 0.3,
                 'fill-extrusion-height': ["/", ["to-number", ["get", "height_ft"]], 3.28],
                 'fill-extrusion-base': 0
             }
@@ -393,9 +416,13 @@
             legend_occ.appendChild(item);
         }
 
-
+        document.getElementById('name').innerHTML = "Hover over the BASE of the buildings. Support for 3D hovering is" +
+            " under development at Mapbox and will be incorporated when available.";
         map.on('mouseenter', 'StrType', function (e) {
             map.getCanvas().style.cursor = 'pointer';
+
+            hoveredBuildingID = e.features[0].id;
+            map.setFeatureState({source: 'buildings', id: hoveredBuildingID}, { hover: true});
 
             document.getElementById('name').innerHTML = "Name: " + e.features[0].properties.name;
             document.getElementById('address').innerHTML = "Address: " + e.features[0].properties.address;
@@ -423,7 +450,11 @@
         map.on('mouseleave', 'StrType', function () {
             map.getCanvas().style.cursor = '';
 
-            document.getElementById('name').innerHTML = "";
+            map.setFeatureState({source: 'buildings', id: hoveredBuildingID}, { hover: false});
+            hoveredBuildingID = 'null';
+
+            document.getElementById('name').innerHTML = "Hover over the BASE of the buildings. Support for 3D hovering is" +
+                " under development at Mapbox and will be incorporated when available.";
             document.getElementById('address').innerHTML = "";
             document.getElementById('date').innerHTML = "";
             document.getElementById('height').innerHTML = "";
