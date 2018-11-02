@@ -266,8 +266,10 @@
 
         var max_filter = ['<=', ["to-number", ["get", "date"]], max_date];
         var min_filter = ['>=', ["to-number", ["get", "date"]], min_date];
-        map.setFilter('StrType', ["all", max_filter, min_filter]);
-        map.setFilter('OccType', ["all", max_filter, min_filter]);
+
+        var height_filter = ['>=', ["to-number", ["get", "height_ft"]], 240];
+        map.setFilter('StrType', ["all", max_filter, min_filter, height_filter]);
+        map.setFilter('OccType', ["all", max_filter, min_filter, height_filter]);
 
         document.getElementById('max_constr_year').textContent = max_date;
         document.getElementById('min_constr_year').textContent = min_date;
